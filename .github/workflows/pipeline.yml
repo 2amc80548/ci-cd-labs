@@ -1,4 +1,4 @@
-name: Primer Pipeline CI
+name: Pipeline CI con Pruebas
 
 on:
   push:
@@ -9,29 +9,30 @@ on:
       - main
 
 jobs:
-  hello-ci:
-    name: Hello CI
+  build-and-test:
+    name: Compilar y Probar
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Descargar el repositorio
         uses: actions/checkout@v4
 
-      - name: Mostrar información del entorno
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Ejecutar Pruebas Unitarias
+        working-directory: ./app
         run: |
-          echo "================================"
-          echo "      PRIMER PIPELINE CI"
-          echo "================================"
-          echo "Repositorio: ${{ github.repository }}"
-          echo "Rama: ${{ github.ref_name }}"
-          echo "Commit: ${{ github.sha }}"
-          echo "================================"
+          chmod +x mvnw
+          ./mvnw clean test
 
-      - name: Mostrar fecha y hora
-        run: date
-
-      - name: Mostrar versión de Git
-        run: git --version
-
-      - name: Finalizar pipeline
-        run: echo "Pipeline ejecutado correctamente."
+      - name: Guardar Reporte de Pruebas (Artefacto)
+        if: always() # Esto hace que se guarde el reporte incluso si falla
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-de-pruebas
+          path: app/target/surefire-reports/
