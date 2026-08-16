@@ -18,7 +18,9 @@ public class WebapiApplication {
 class HelloController {
     @GetMapping("/")
     public String hello() {
-        return "Hello CI/CD World!";
+        return "<h1>Hello CI/CD World!</h1>" +
+               "<p>¡Bienvenido a mi Laboratorio 3 de Integración Continua!</p>" +
+               "<p>Este es un servidor Spring Boot funcionando.</p>";
     }
 }
 
