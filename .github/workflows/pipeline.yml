@@ -28,7 +28,7 @@ jobs:
           echo "================================"
 
       - name: Mostrar fecha y hora
-        run: date
+        run: comando falso
 
       - name: Mostrar versión de Git
         run: git --version
